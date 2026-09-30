@@ -1,0 +1,182 @@
+[worldserver]
+
+########################################
+# mod-holiday-control
+#
+# Control holidays and world events from this file: force any of them on or off, move them to
+# other dates, and run bonus events of your own (double XP weekends and the like).
+#
+# Edit, then type .reload config in game (or in the worldserver console). Changes take effect
+# right away, no restart needed. The config always wins: a GM's .event start/stop on an event the
+# config controls is undone on the next check.
+#
+# Dates are "YYYY-MM-DD" or "YYYY-MM-DD HH:MM", in the worldserver's local time.
+# Durations are written like "7d", "2d12h", "90m" or "1w" (w = weeks, d = days, h = hours,
+# m = minutes). A plain number without a unit is not accepted, except "0".
+########################################
+
+#
+#    HolidayControl.Enable
+#        Description: Master switch. With 0, every event runs on its normal schedule, no bonus event
+#                     runs, and nothing is announced.
+#        Default:     1
+#
+
+HolidayControl.Enable = 1
+
+#
+#    HolidayControl.Announce
+#        Description: Tell everyone online in chat when a holiday or bonus event starts and ends.
+#        Default:     1
+#
+
+HolidayControl.Announce = 1
+
+#
+#    HolidayControl.LoginMessage
+#        Description: On login, tell the player which holidays and bonus events are running.
+#        Default:     1
+#
+
+HolidayControl.LoginMessage = 1
+
+#
+#    HolidayControl.UpcomingDays
+#        Description: How many days ahead .holidays looks for upcoming events.
+#        Default:     30
+#
+
+HolidayControl.UpcomingDays = 30
+
+########################################
+# Game events (holidays and world events)
+#
+# Every game event has an id. Some common ones:
+#
+#      1  Midsummer Fire Festival             26  Pilgrim's Bounty
+#      2  Winter Veil                         50  Pirates' Day
+#      3  Darkmoon Faire (Terokkar Forest)    51  Day of the Dead
+#      4  Darkmoon Faire (Elwynn Forest)      52  Winter Veil: Gifts
+#      5  Darkmoon Faire (Mulgore)            72  Fireworks Spectacular
+#      6  New Year's Eve                      15  Stranglethorn Fishing Extravaganza
+#      7  Lunar Festival                      64  Kalu'ak Fishing Derby
+#      8  Love is in the Air                  16  Gurubashi Arena Booty Run
+#      9  Noblegarden                     27-30  Edge of Madness (Gri'lek, Hazza'rah, Renataki,
+#     10  Children's Week                          Wushoolay)
+#     11  Harvest Festival                18-21  Call to Arms: AV, WSG, AB, EotS
+#     12  Hallow's End                    53-54  Call to Arms: SotA, IoC
+#     13  Elemental Invasions                 24  Brewfest
+#
+# In game, .holidays list shows every event with its id and when it runs next. .holidays list
+# brew filters by name.
+#
+# Some holidays have a setup stage that is its own event: Brewfest's tents go up in 70
+# (Ironforge) and 91 (Orgrimmar), the Darkmoon Faire is built in 23 (Elwynn), 71 (Mulgore) and
+# 77 (Terokkar). The Stranglethorn Fishing Extravaganza is 14 (announcer), 15 (pools), 62 (crew)
+# and 90 (turn-ins). Changing one event doesn't move the others; change them together.
+#
+# World events that move through their own stages (Scourge Invasion, the AQ War Effort, Sun's
+# Reach, Wintergrasp) can't be controlled here. The core has its own commands for those, for
+# example .worldstate scourgeinvasion state 1.
+#
+# Settings, per event (replace <id> with the event's id):
+#
+#    HolidayControl.Event.<id>.Mode
+#        auto  = runs on its schedule (the default; the Start/Length/Repeat/End below apply)
+#        on    = always running, until you set it back
+#        off   = never runs
+#
+#    HolidayControl.Event.<id>.Start    First start, a date. Without it the event keeps its own.
+#    HolidayControl.Event.<id>.Length   How long each run lasts, a duration.
+#    HolidayControl.Event.<id>.Repeat   Time from one start to the next, a duration. "0" = once.
+#                                       A normal yearly holiday is "365d".
+#    HolidayControl.Event.<id>.End      No run starts after this date.
+#
+#    HolidayControl.Event.<id>.Name     The name players see (default: the game event's name).
+#    HolidayControl.Event.<id>.Show     1 or 0: show it in .holidays, login messages and
+#                                       announcements. Holidays are shown by default; other events
+#                                       only when this file controls them or names them.
+#
+# Leave out whatever you don't want to change. Removing an event's settings and reloading puts
+# it back on its normal schedule.
+#
+# Examples:
+#
+#   The Darkmoon Faire always in Elwynn Forest, never anywhere else:
+#     HolidayControl.Event.4.Mode = "on"
+#     HolidayControl.Event.5.Mode = "off"
+#     HolidayControl.Event.3.Mode = "off"
+#
+#   Hallow's End all year round:
+#     HolidayControl.Event.12.Mode = "on"
+#
+#   No Love is in the Air:
+#     HolidayControl.Event.8.Mode = "off"
+#
+#   Brewfest every 2 months for 2 weeks, starting October 1st:
+#     HolidayControl.Event.24.Start = "2026-10-01"
+#     HolidayControl.Event.24.Length = "14d"
+#     HolidayControl.Event.24.Repeat = "60d"
+#
+#   Make Midsummer last 3 weeks instead of 2, on its usual dates:
+#     HolidayControl.Event.1.Length = "21d"
+#
+#   Announce the Gurubashi Arena chest (every 3 hours):
+#     HolidayControl.Event.16.Show = 1
+########################################
+
+# Nicer names for events whose database names are technical.
+HolidayControl.Event.15.Name = "Stranglethorn Fishing Extravaganza"
+HolidayControl.Event.64.Name = "Kalu'ak Fishing Derby"
+
+########################################
+# Bonus events
+#
+# Your own events that change rates while they run. Give each one a short key without spaces or
+# dots (DoubleXP, BrewfestRep, ...) and set any of:
+#
+#    HolidayControl.Bonus.<key>.Name        Name players see (default: the key).
+#    HolidayControl.Bonus.<key>.Mode        auto (default), on (running until you set it back),
+#                                           off (never runs).
+#    HolidayControl.Bonus.<key>.Start       First start, a date.
+#    HolidayControl.Bonus.<key>.Length      How long each run lasts. Required with Start.
+#    HolidayControl.Bonus.<key>.Repeat      Time from one start to the next. "0" or left out = once.
+#    HolidayControl.Bonus.<key>.End         No run starts after this date.
+#    HolidayControl.Bonus.<key>.During      Game event ids: also runs while any of them runs,
+#                                           e.g. "24" for Brewfest, "18, 19, 20, 21" for Call to Arms.
+#
+#    Rates (1 = normal, 2 = double, 1.5 = +50%):
+#    HolidayControl.Bonus.<key>.XP          All experience: kills, quests, exploration.
+#    HolidayControl.Bonus.<key>.Reputation  Reputation gains (losses are not changed).
+#    HolidayControl.Bonus.<key>.Gold        Gold looted from creatures and chests.
+#    HolidayControl.Bonus.<key>.Gathering   Skill points per skill-up in mining, herbalism and
+#                                           skinning (2 = two points per skill-up).
+#    HolidayControl.Bonus.<key>.Drops       Drop chance of items that roll on their own (most
+#                                           quest items, world drops, rare drops) from creatures,
+#                                           chests, fishing, skinning and pickpocketing. Items that
+#                                           share one roll in a loot group are not changed.
+#
+# The rates apply on top of the server's own rates and other modules. Bonus events don't stack:
+# when two run at once, each rate uses the higher one.
+#
+# Examples:
+#
+#   Double XP every weekend, Friday 18:00 to Monday 06:00:
+#     HolidayControl.Bonus.DoubleXP.Name = "Double XP Weekend"
+#     HolidayControl.Bonus.DoubleXP.Start = "2026-10-02 18:00"
+#     HolidayControl.Bonus.DoubleXP.Length = "2d12h"
+#     HolidayControl.Bonus.DoubleXP.Repeat = "7d"
+#     HolidayControl.Bonus.DoubleXP.XP = 2
+#
+#   +50% reputation while Brewfest runs:
+#     HolidayControl.Bonus.BrewfestRep.Name = "Brewfest Cheer"
+#     HolidayControl.Bonus.BrewfestRep.During = "24"
+#     HolidayControl.Bonus.BrewfestRep.Reputation = 1.5
+#
+#   A one-off treasure hunt for launch day, turned on and off by hand:
+#     HolidayControl.Bonus.Launch.Name = "Treasure Week"
+#     HolidayControl.Bonus.Launch.Mode = "on"
+#     HolidayControl.Bonus.Launch.Gold = 2
+#     HolidayControl.Bonus.Launch.Drops = 1.5
+#     HolidayControl.Bonus.Launch.Gathering = 2
+########################################
