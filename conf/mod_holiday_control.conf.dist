@@ -51,29 +51,56 @@ HolidayControl.UpcomingDays = 30
 ########################################
 # Game events (holidays and world events)
 #
-# Every game event has an id. Some common ones:
+# Every game event has an id. These are the ones in a stock AzerothCore database; yours may
+# differ slightly. In game, .holidays list shows every event with its id and when it runs next,
+# and .holidays list brew filters by name.
 #
-#      1  Midsummer Fire Festival             26  Pilgrim's Bounty
-#      2  Winter Veil                         50  Pirates' Day
-#      3  Darkmoon Faire (Terokkar Forest)    51  Day of the Dead
-#      4  Darkmoon Faire (Elwynn Forest)      52  Winter Veil: Gifts
-#      5  Darkmoon Faire (Mulgore)            72  Fireworks Spectacular
-#      6  New Year's Eve                      15  Stranglethorn Fishing Extravaganza
-#      7  Lunar Festival                      64  Kalu'ak Fishing Derby
-#      8  Love is in the Air                  16  Gurubashi Arena Booty Run
-#      9  Noblegarden                     27-30  Edge of Madness (Gri'lek, Hazza'rah, Renataki,
-#     10  Children's Week                          Wushoolay)
-#     11  Harvest Festival                18-21  Call to Arms: AV, WSG, AB, EotS
-#     12  Hallow's End                    53-54  Call to Arms: SotA, IoC
-#     13  Elemental Invasions                 24  Brewfest
+# Holidays (players see them and get announcements by default):
 #
-# In game, .holidays list shows every event with its id and when it runs next. .holidays list
-# brew filters by name.
+#      7  Lunar Festival                         14 days
+#      8  Love is in the Air                     14 days
+#      9  Noblegarden                            7 days
+#     10  Children's Week                        7 days
+#      1  Midsummer Fire Festival                14 days
+#     72  Fireworks Spectacular                  18 hours
+#     50  Pirates' Day                           1 day
+#     11  Harvest Festival                       7 days
+#     24  Brewfest                               15 days
+#     12  Hallow's End                           14 days
+#     51  Day of the Dead                        2 days
+#     26  Pilgrim's Bounty                       7 days
+#      2  Winter Veil                            18 days
+#      4  Darkmoon Faire (Elwynn Forest)         7 days, rotates between the three
+#      5  Darkmoon Faire (Mulgore)               7 days, rotates between the three
+#      3  Darkmoon Faire (Terokkar Forest)       7 days, rotates between the three
+#     15  Stranglethorn Fishing Extravaganza     2 hours, weekly
+#     64  Kalu'ak Fishing Derby                  1 hour, weekly
+#     18  Call to Arms: Alterac Valley           about 4.5 days, each battleground every 6 weeks
+#     19  Call to Arms: Warsong Gulch            about 4.5 days, each battleground every 6 weeks
+#     20  Call to Arms: Arathi Basin             about 4.5 days, each battleground every 6 weeks
+#     21  Call to Arms: Eye of the Storm         about 4.5 days, each battleground every 6 weeks
+#     53  Call to Arms: Strand of the Ancients   about 4.5 days, each battleground every 6 weeks
+#     54  Call to Arms: Isle of Conquest         about 4.5 days, each battleground every 6 weeks
 #
-# Some holidays have a setup stage that is its own event: Brewfest's tents go up in 70
-# (Ironforge) and 91 (Orgrimmar), the Darkmoon Faire is built in 23 (Elwynn), 71 (Mulgore) and
-# 77 (Terokkar). The Stranglethorn Fishing Extravaganza is 14 (announcer), 15 (pools), 62 (crew)
-# and 90 (turn-ins). Changing one event doesn't move the others; change them together.
+# Seasonal events the database doesn't mark as holidays (hidden unless you set Show = 1):
+#
+#      6  New Year's Eve
+#     52  Winter Veil: Gifts (the presents under the tree)
+#
+# Setup stages. Each is its own event, so changing the main event doesn't move them; change
+# them together:
+#
+#      70, 91  Brewfest tents going up (Ironforge, Orgrimmar)
+#  23, 71, 77  Darkmoon Faire construction (Elwynn, Mulgore, Terokkar)
+#  14, 62, 90  Stranglethorn Fishing Extravaganza announcer, crew and turn-ins
+#              (15 is the main one)
+#
+# Other world events (hidden unless you set Show = 1):
+#
+#          16  Gurubashi Arena Booty Run (every 3 hours)
+#       27-30  Edge of Madness in Zul'Gurub: Gri'lek, Hazza'rah, Renataki, Wushoolay
+#          13  Elemental Invasions (never runs in stock data; Mode = on turns it on)
+#       34-45  Brew of the Month (October to September, one event per month)
 #
 # World events that move through their own stages (Scourge Invasion, the AQ War Effort, Sun's
 # Reach, Wintergrasp) can't be controlled here. The core has its own commands for those, for
