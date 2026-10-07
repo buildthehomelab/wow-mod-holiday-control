@@ -96,6 +96,12 @@ The `.conf.dist` explains every setting and has a list of common event ids.
 | `.holidays` | everyone | Holidays and bonus events running now and coming up in the next 30 days |
 | `.holidays list [name]` | GM, console | Every game event with its id, state, next start and whether the config controls it, plus the bonus events |
 
+## Requirements
+
+- [AzerothCore](https://www.azerothcore.org/) wotlk (master) and a WoW 3.3.5a (12340) client.
+- Nothing else: no SQL, no client patch and no other module. Bonus XP also applies to playerbots
+  if you run [mod-playerbots](https://github.com/mod-playerbots/mod-playerbots).
+
 ## Install
 
 Clone it into your AzerothCore `modules` folder **as `mod-holiday-control`**, without the repo's
@@ -116,6 +122,23 @@ Rebuild the worldserver, then copy `conf/mod_holiday_control.conf.dist` to your 
   Moving the main event doesn't move the setup stage.
 - Bonus XP also applies to playerbots.
 
+## Troubleshooting
+
+- **A config change doesn't apply.** Type `.reload config`; no restart is needed. Check
+  `.holidays list` for whether the config controls the event.
+- **A GM's `.event start` or `.event stop` gets undone.** The config always wins on a controlled
+  event. Set the event's `Mode` or remove its settings instead.
+- **The client's calendar still shows the old dates.** It shows holidays on their standard dates
+  whatever the server does. Use `.holidays` to see what is really running.
+- **Moving a holiday didn't move its tents or construction.** The setup stage is its own event;
+  give it the same settings.
+- **A world event like Scourge Invasion isn't affected.** Only scheduled game events can be
+  controlled; the others have their own core commands, like `.worldstate scourgeinvasion state 1`.
+
+## Credits
+
+Author: [buildthehomelab](https://github.com/buildthehomelab)
+
 ## License
 
-MIT
+MIT, see [LICENSE](LICENSE).
